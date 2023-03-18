@@ -18,16 +18,33 @@ class TimeProgressHomePage extends StatefulWidget {
 
 class _TimeProgressHomePageState extends State<TimeProgressHomePage> {
   Timer? timer;
+
+  PreferencesProvider? provider;
+
   late double yearPercent;
   late double monthPercent;
   late double dayPercent;
+  late double workingDayPercent;
 
   // Update the time and refresh the UI
   void _updateTime() {
+    int sh = 8;
+    int eh = 17;
+    int sm = 0;
+    int em = 0;
+
+    if (provider != null) {
+      sh = provider!.workingDayStartHour;
+      eh = provider!.workingDayEndHour;
+      sm = provider!.workingDayStartMinutes;
+      em = provider!.workingDayEndMinutes;
+    }
+
     setState(() {
       yearPercent = TimeUtils.getYearPercentage();
       monthPercent = TimeUtils.getMonthPercentage();
       dayPercent = TimeUtils.getDayPercentage();
+      workingDayPercent = TimeUtils.getWorkingDayPercentage(sh, eh, sm, em);
     });
   }
 
@@ -38,6 +55,12 @@ class _TimeProgressHomePageState extends State<TimeProgressHomePage> {
 
     timer =
         Timer.periodic(const Duration(milliseconds: 500), (_) => _updateTime());
+  }
+
+  @override
+  void didChangeDependencies() {
+    provider = Provider.of<PreferencesProvider>(context);
+    super.didChangeDependencies();
   }
 
   @override
@@ -63,6 +86,11 @@ class _TimeProgressHomePageState extends State<TimeProgressHomePage> {
       percent: dayPercent,
     );
 
+    final Widget workingDayProgressBar = ProgressBar(
+      title: 'Workday',
+      percent: workingDayPercent,
+    );
+
     return Scaffold(
       floatingActionButton: const Fab(),
       body: Stack(
@@ -74,19 +102,21 @@ class _TimeProgressHomePageState extends State<TimeProgressHomePage> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).size.height * 0.20,
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Theme.of(context).cardColor,
-                ),
-                height: MediaQuery.of(context).size.height * 0.5,
-                padding: const EdgeInsets.only(
-                  right: 40.0,
-                  left: 40.0,
-                ),
-                child: Consumer<PreferencesProvider>(
-                  builder: (context, provider, child) {
-                    return Column(
+              child: Consumer<PreferencesProvider>(
+                builder: (context, provider, child) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).cardColor.withOpacity(
+                            provider.mainCardOpacity,
+                          ),
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    padding: const EdgeInsets.only(
+                      right: 40.0,
+                      left: 40.0,
+                    ),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         if (provider.showCurrentDate) ...{
@@ -98,6 +128,9 @@ class _TimeProgressHomePageState extends State<TimeProgressHomePage> {
                           ),
                         },
                         if (provider.swapBarsOrder) ...[
+                          provider.showWorkingDayBar
+                              ? workingDayProgressBar
+                              : const SizedBox.shrink(),
                           dayProgressBar,
                           monthProgressBar,
                           yearProgressBar,
@@ -105,11 +138,14 @@ class _TimeProgressHomePageState extends State<TimeProgressHomePage> {
                           yearProgressBar,
                           monthProgressBar,
                           dayProgressBar,
+                          provider.showWorkingDayBar
+                              ? workingDayProgressBar
+                              : const SizedBox.shrink(),
                         ],
                       ],
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

@@ -35,4 +35,20 @@ class TimeUtils {
     final elapsed = now.difference(startOfDay).inSeconds;
     return elapsed / duration;
   }
+
+  static double getWorkingDayPercentage(
+      int startHour, int endHour, int startMinutes, int endMinutes) {
+    final now = DateTime.now();
+    final startOfWorkingDay =
+        DateTime(now.year, now.month, now.day, startHour, startMinutes);
+    final endOfWorkingDay =
+        DateTime(now.year, now.month, now.day, endHour, endMinutes);
+    final duration = endOfWorkingDay.difference(startOfWorkingDay).inSeconds;
+    final elapsed = now.difference(startOfWorkingDay).inSeconds;
+
+    if (elapsed < 0) return 0;
+    if (elapsed > duration) return 1;
+
+    return elapsed / duration;
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +58,7 @@ class _FabState extends State<Fab> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ToggleItem(
-                title: 'Show current date',
+                title: 'Display current date',
                 value: provider.showCurrentDate,
                 onChanged: (val) => provider.setShowCurrentDate(val),
               ),
@@ -67,9 +68,72 @@ class _FabState extends State<Fab> {
                 onChanged: (val) => provider.setSwapBarsOrder(val),
               ),
               ToggleItem(
-                title: 'Show precise percentage',
+                title: 'Decimal percentage',
                 value: provider.showPercentageDecimals,
                 onChanged: (val) => provider.setShowPercentageDecimals(val),
+              ),
+              ToggleItem(
+                title: 'Show workday bar',
+                value: provider.showWorkingDayBar,
+                onChanged: (val) => provider.setShowWorkingDayBar(val),
+              ),
+              // Work hours time picker
+              if (provider.showWorkingDayBar)
+                Row(
+                  children: [
+                    const Text('Workday time'),
+                    const Spacer(),
+                    TextButton(
+                      child: Text('${provider.workingDayStartHour}:'
+                          '${provider.workingDayStartMinutes == 0 ? '00' : provider.workingDayStartMinutes < 10 ? '0${provider.workingDayStartMinutes}' : provider.workingDayStartMinutes}'),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          showPicker(
+                            context: context,
+                            value: Time(
+                                hour: provider.workingDayStartHour,
+                                minute: provider.workingDayStartMinutes),
+                            onChange: (time) {
+                              provider.setWorkingDayStartHour(time.hour);
+                              provider.setWorkingDayStartMinutes(time.minute);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    const Text(' - '),
+                    TextButton(
+                      child: Text('${provider.workingDayEndHour}:'
+                          '${provider.workingDayEndMinutes == 0 ? '00' : provider.workingDayEndMinutes < 10 ? '0${provider.workingDayEndMinutes}' : provider.workingDayEndMinutes}'),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          showPicker(
+                            context: context,
+                            value: Time(
+                                hour: provider.workingDayEndHour,
+                                minute: provider.workingDayEndMinutes),
+                            onChange: (time) {
+                              provider.setWorkingDayEndHour(time.hour);
+                              provider.setWorkingDayEndMinutes(time.minute);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              Row(
+                children: [
+                  const Text('Card opacity'),
+                  Slider(
+                    value: provider.mainCardOpacity,
+                    min: 0,
+                    max: 1,
+                    divisions: 10,
+                    label: '${(provider.mainCardOpacity * 100).round()}%',
+                    onChanged: (val) => provider.setMainCardOpacity(val),
+                  ),
+                ],
               ),
             ],
           );
@@ -97,7 +161,7 @@ class _FabState extends State<Fab> {
             const Text(
               Constants.kAppDescription,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 15),
             const LinkText(
               text: 'Source Code',
               link: Constants.kAppRepo,

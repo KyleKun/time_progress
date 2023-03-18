@@ -14,7 +14,7 @@
 
 ## About
 
-Inspired by Filip Hracek's [Year Progress](https://twitter.com/year_progress), I decided to create a customizable web app with Flutter that shows the progress of the day, week, month and year.
+Inspired by Filip Hracek's [Year Progress](https://twitter.com/year_progress), I decided to create a customizable web app with Flutter that shows the progress of the workday, day, week, month and year.
 
 Feel free to [set it as your browser home page](https://kylekun.com/time_progress/) and get anxious everyday with me seeing how fast time flies xD.
 
@@ -26,12 +26,10 @@ Feel free to [set it as your browser home page](https://kylekun.com/time_progres
 - Show or hide the current date
 - Choose the colors from the various Material 3 themes
 - Your preferences are saved automatically
-- No analytics or tracking, it's part of my [open-source blog](https://github.com/KyleKun/blog/)
+- No analytics or tracking, as it's hosted inside my [open source blog](https://github.com/KyleKun/blog/)
 
 ## Support my work
 
-If you like this or other things I've made, consider becoming a [sponsor](https://github.com/sponsors/KyleKun). It will allow me to stay motivated to work on open-source projects.
+If you like this and/or [other things I've made](https://kylekun.com/work), consider [becoming a sponsor](https://github.com/sponsors/KyleKun). It will allow me to stay motivated to work on open source projects.
 
-Alternatively, you can also make a one-time donation:
-
-[![buymeacoffee](https://user-images.githubusercontent.com/835641/60540201-fcd7fa00-9ce4-11e9-87ec-1e98568e9f58.png)](https://www.buymeacoffee.com/kylekun)
+Alternatively, you can [buy me a coffee](https://www.buymeacoffee.com/kylekun).

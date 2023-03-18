@@ -37,6 +37,15 @@ class SharedPrefs {
     return _preferences!.setInt(key, value);
   }
 
+  static double? getDouble(String key) {
+    if (_preferences == null) return null;
+    return _preferences!.getDouble(key);
+  }
+
+  static Future<bool> putDouble(String key, double value) {
+    return _preferences!.setDouble(key, value);
+  }
+
   static bool? getBool(String key) {
     if (_preferences == null) return null;
     return _preferences!.getBool(key);
